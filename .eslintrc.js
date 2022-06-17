@@ -10,7 +10,8 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   globals: {
-    PetiteVue: true
+    PetiteVue: true,
+    define: true,
   },
   rules: {
     indent: ['error', 2],
