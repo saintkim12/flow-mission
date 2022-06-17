@@ -1,6 +1,6 @@
 # 제출물
-[Demo](https://saintkim12.github.io/flow-mission/) - https://saintkim12.github.io/flow-mission/
-[Source(github)](https://github.com/saintkim12/flow-mission) - https://github.com/saintkim12/flow-mission
+- [Demo](https://saintkim12.github.io/flow-mission/) - https://saintkim12.github.io/flow-mission/
+- [Source(github)](https://github.com/saintkim12/flow-mission) - https://github.com/saintkim12/flow-mission
 
 # 확인 전 참고할 사항 메모
 ## github 공개 상태
@@ -15,7 +15,7 @@ VSCode, (Live Server Extension)
 
 ### 백엔드
 - **없음**
-- 백엔드 서버/DB를 띄울 환경이 없어, **사용자의 브라우저(localStorage)**에 값을 저장하는 식으로 데이터를 관리
+- 백엔드 서버/DB를 띄울 환경이 없어, **사용자의 브라우저(localStorage)** 에 값을 저장하는 식으로 데이터를 관리
 - 만약 백엔드 서버를 구현한다면 Rest API 방식으로 구현을 한다고 가정하고 기능을 구현함(생각한 환경은 Express.js 환경)
 
 ### 프론트엔드
@@ -44,13 +44,13 @@ VSCode, (Live Server Extension)
 
 
 # 기존요건
-1-1. 고정 확장자는 차단을 자주하는 확장자를 리스트이며, default는 unCheck되어져 있습니다.
-1-2. 고정 확장자를 check or uncheck를 할 경우 db(에 저장됩니다. - 새로고침시 유지되어야합니다.
+- 1-1. 고정 확장자는 차단을 자주하는 확장자를 리스트이며, default는 unCheck되어져 있습니다.
+- 1-2. 고정 확장자를 check or uncheck를 할 경우 db(에 저장됩니다. - 새로고침시 유지되어야합니다.  
 (아래쪽 커스텀 확장자에는 표현되지 않으니 유의해주세요.)
-2-1. 확장자 최대 입력 길이는 20자리
-2-2. 추가버튼 클릭시 db 저장되며, 아래쪽 영역에 표현됩니다.
-3-1. 커스텀 확장자는 최대 200개까지 추가가 가능
-3-2. 확장자 옆 X를 클릭시 db에서 삭제
+- 2-1. 확장자 최대 입력 길이는 20자리
+- 2-2. 추가버튼 클릭시 db 저장되며, 아래쪽 영역에 표현됩니다.
+- 3-1. 커스텀 확장자는 최대 200개까지 추가가 가능
+- 3-2. 확장자 옆 X를 클릭시 db에서 삭제
 
 # 고려한 요건
 - 백엔드 서버 환경을 없다고 가정하고 구현을 했고, 추후 백엔드 서버(Node.js)가 생길 경우를 대비하여 재사용을 위해 기능 공통화 및 기능 확장을 고려하면서 작업을 진행함
