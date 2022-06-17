@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/bulma">
+  <script src="https://unpkg.com/petite-vue-csp"></script>
+  <!-- <script src="https://unpkg.com/lodash"></script> -->
+  <title>서버 개발자 과제</title>
+</head>
+<body>
+  <div id="app" @vue:mounted="mounted">
+    <div class="container is-fluid">
+      <div class="box">
+        <div class="columns">
+          <div class="column is-2">
+            <label class="label">고정 확장자</label>
+          </div>
+          <div class="column is-10">
+            <label v-for="ext in allFixedExtList" :key="ext" class="checkbox">
+              <input type="checkbox" :value="ext" @change="onCheckboxChanged(ext, $event.target.checked)">
+              <span class="mr-2">{{ ext }}</span>
+            </label>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-2">
+            <label class="label">커스텀 확장자</label>
+          </div>
+          <div class="column is-10">
+            <div class="field has-addons">
+              <p class="control is-expanded">
+                <input v-model="inputCustomExt" class="input is-small" type="text" placeholder="확장자 입력" @keydown.enter="addCustomExt(inputCustomExt)">
+              </p>
+              <p class="control">
+                <a class="button is-small is-dark" @click.prevent="addCustomExt(inputCustomExt)">
+                  + 추가
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-offset-2 is-10">
+            <div class="box">
+              <span class="subtitle is-size-7 is-block mb-2">{{ customExtList.length }}/{{ maxCustomExtLength }}</span>
+              <div class="field is-grouped is-grouped-multiline">
+                <div v-for="ext in customExtList" :key="ext" class="control">
+                  <div class="tags has-addons">
+                    <span class="tag is-light">{{ ext }}</span>
+                    <a class="tag is-delete" @click.prevent="removeCustomExt(ext)"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // without-server 로직
+    const withoutServer = {
+      async getAllFixedExtList() {
+        const allFixedExtList = await new Promise(resolve => window.setTimeout(() => resolve([
+          'bat',
+          'cmd',
+          'com', 
+          'cpl',
+          'exe',
+          'scr',
+          'js',
+        ]), 200))
+        return allFixedExtList
+      },
+      async getFixedExtList() {
+        const fixedExtList = await new Promise(resolve => window.setTimeout(() => resolve([
+        ]), 200))
+        return fixedExtList
+      },
+      async getCustomExtList() {
+        const customExtList = await new Promise(resolve => window.setTimeout(() => resolve([
+          'sh',
+          'ju',
+          'ch',
+        ]), 250))
+        return customExtList
+      },
+    }
+    // /script>
+    // script>
+    const { getAllFixedExtList, getFixedExtList, getCustomExtList } = withoutServer
+    PetiteVue.createApp({
+      /* constants */
+      // 최대 커스텀 확장자 리스트 수
+      maxCustomExtLength: 200,
+
+      /* data */
+      // 전체 고정 확장자 리스트
+      allFixedExtList: [],
+      // 고정 확장자 리스트
+      fixedExtList: [],
+      // 커스텀 확장자 리스트
+      customExtList: [],
+
+      /* form data */
+      inputCustomExt: '',
+      // lifecycle methods
+      async mounted() {
+        this.allFixedExtList = await getAllFixedExtList()
+        this.fixedExtList = await getFixedExtList()
+        this.customExtList = await getCustomExtList()
+      },
+      // methods
+      /**
+       * 확장자의 유효성 체크 및 정리된 값 리턴
+       * @param rawExt {string} 확장자
+       * @returns {string | Error} 정리된 확장자 값 또는 오류
+       */
+      getValidExt(rawExt) {
+        const { fixedExtList, customExtList } = this
+        if (!rawExt || typeof rawExt !== 'string' || !rawExt?.trim?.()) {
+          throw new Error('값이 올바르지 않습니다.')
+        }
+        let ext = rawExt?.trim?.()?.toLowerCase?.() // trim 및 소문자 처리
+        if (fixedExtList.includes(ext) || customExtList.includes(ext)) {
+          throw new Error('이미 존재하는 값입니다.')
+        }
+        return ext
+      },
+      /**
+       * 고정 확장자를 추가
+       * @param rawExt {string} 추가할 확장자
+       */
+      async addFixedExt(rawExt) {
+        const { allFixedExtList } = this
+        const { getValidExt } = this
+        try {
+          // 1. 유효성 체크
+          const ext = getValidExt(rawExt)
+          if (!allFixedExtList.includes(ext)) {
+            throw new Error('추가할 수 있는 고정 확장자가 아닙니다.')
+          }
+
+          // 2. DB에 처리 요청
+
+          // 3. 처리 결과를 반영
+          // 3-1. 단순 보여주기
+          this.fixedExtList = this.fixedExtList.concat(ext).slice().sort() /* 정렬 */
+          // 3-2. 실제 재조회
+          // this.fixedExtList = await getFixedExtList()
+        } catch(e) {
+          window.alert(e.message)
+        }
+      },
+      /**
+       * 고정 확장자를 삭제
+       * @param ext {string} 삭제할 확장자
+       */
+      async removeFixedExt(ext) {
+        const { fixedExtList } = this
+        try {
+          // 1. 유효성 체크
+          if (!fixedExtList.includes(ext)) {
+            throw new Error('값을 삭제할 수 없습니다.')
+          }
+
+          // 2. DB에 처리 요청
+
+          // 3. 처리 결과를 반영
+          // 3-1. 단순 보여주기
+          this.fixedExtList = this.fixedExtList.filter(curExt => curExt !== ext).slice().sort() /* 정렬 */
+          // 3-2. 실제 재조회
+          // this.fixedExtList = await getFixedExtList()
+        } catch(e) {
+          window.alert(e.message)
+        }
+      },
+      /**
+       * 커스텀 확장자를 추가
+       * @param rawExt {string} 추가할 확장자
+       */
+      async addCustomExt(rawExt) {
+        const { allFixedExtList, customExtList, maxCustomExtLength } = this
+        const { getValidExt, addFixedExt } = this
+        try {
+          // 1. 유효성 체크
+          const ext = getValidExt(rawExt)
+          if (allFixedExtList.includes(ext)) {
+            // Note: 고정 확장자의 값을 커스텀 확장자에서 입력(체크)하도록 처리
+            addFixedExt(ext)
+          } else {
+            if (customExtList.length >= maxCustomExtLength) {
+              throw new Error('더이상 추가할 수 없습니다.')
+            }
+            // 2. DB에 처리 요청
+
+            // 3. 처리 결과를 반영
+            // 3-1. 단순 보여주기
+            this.customExtList = this.customExtList.concat(ext)
+            // 3-2. 실제 재조회
+            // this.customExtList = await getCustomExtList()
+          }
+          // 4. 입력값 초기화
+          this.inputCustomExt = ''
+        } catch(e) {
+          window.alert(e.message)
+        }
+      },
+      /**
+       * 커스텀 확장자를 삭제
+       * @param ext {string} 삭제할 확장자
+       */
+      async removeCustomExt(ext) {
+        const { customExtList } = this
+        try {
+          // 1. 유효성 체크
+          if (!customExtList.includes(ext)) {
+            throw new Error('값을 삭제할 수 없습니다.')
+          }
+
+          // 2. DB에 처리 요청
+
+          // 3. 처리 결과를 반영
+          // 3-1. 단순 보여주기
+          this.customExtList = this.customExtList.filter(curExt => curExt !== ext)
+          // 3-2. 실제 재조회
+          // this.customExtList = await getCustomExtList()
+        } catch(e) {
+          window.alert(e.message)
+        }
+      },
+      /**
+       * 고정 확장자 체크박스를 변경할 때 이벤트 처리
+       * @param value {string?}
+       * @param doInsert {boolean}
+       */
+      onCheckboxChanged(value, doInsert) {
+        console.log('onCheckboxChanged', arguments)
+        const { addFixedExt, removeFixedExt } = this
+        if (doInsert) {
+          addFixedExt(value)
+        } else {
+          removeFixedExt(value)
+        }
+      },
+    }).mount('#app')
+  </script>
+</body>
+</html>

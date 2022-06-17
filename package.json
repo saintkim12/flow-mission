@@ -1,0 +1,23 @@
+{
+  "name": "flow-mission",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/saintkim12/flow-mission.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/saintkim12/flow-mission/issues"
+  },
+  "homepage": "https://github.com/saintkim12/flow-mission#readme",
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-plugin-html": "^6.2.0"
+  }
+}
